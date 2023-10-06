@@ -1,7 +1,7 @@
 #ifndef ACSOURCE_HPP
 #define ACSOURCE_HPP
 
-#include "Source.hpp"
+#include "sources/Source.hpp"
 
 class ACSource : public Source {
 protected:

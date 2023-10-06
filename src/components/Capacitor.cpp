@@ -1,4 +1,4 @@
-#include "Capacitor.hpp"
+#include "components/Capacitor.hpp"
 
 // Constructor
 Capacitor::Capacitor(double firstValue, double secondValue, ComponentMode mode) 

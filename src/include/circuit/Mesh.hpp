@@ -3,9 +3,10 @@
 
 // Includes
 #include <vector>
-#include "ACVoltageSource.hpp"
-#include "ACCurrentSource.hpp"
-#include "Component.hpp"
+#include <algorithm>
+#include "sources/AC/ACVoltageSource.hpp"
+#include "sources/AC/ACCurrentSource.hpp"
+#include "components/Component.hpp"
 
 class Mesh {
 private:

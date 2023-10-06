@@ -1,14 +1,12 @@
 #ifndef ACVOLTAGESOURCE_HPP
 #define ACVOLTAGESOURCE_HPP
 
-#include "ACSource.hpp"
+#include "sources/AC/ACSource.hpp"
 
 class ACVoltageSource : public ACSource {
 public:
-    ACVoltageSource(double amplitude, double frequency, double phase)
-        : ACSource(amplitude, frequency, phase) {}
-    ACVoltageSource(std::complex<double> phasor, double frequency)
-        : ACSource(phasor, frequency) {}      
+    ACVoltageSource(double amplitude, double frequency, double phase);
+    ACVoltageSource(std::complex<double> phasor, double frequency); 
 };
 
 #endif // ACVOLTAGESOURCE_HPP

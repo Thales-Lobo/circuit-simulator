@@ -1,9 +1,8 @@
-#include "ACVoltageSource.hpp"
-#include "Resistor.hpp"
-#include "Inductor.hpp"
-#include "Mesh.hpp"
-#include "Circuit.hpp"
-#include "Simulator.hpp"
+#include "sources/AC/ACVoltageSource.hpp"
+#include "components/Resistor.hpp"
+#include "circuit/Mesh.hpp"
+#include "circuit/Circuit.hpp"
+#include "simulator/Simulator.hpp"
 #include <iostream>
 #include <vector>
 

@@ -1,4 +1,4 @@
-#include "Component.hpp"
+#include "components/Component.hpp"
 
 // Constructor
 Component::Component(double firstValue, double secondValue, ComponentMode mode) {
@@ -32,6 +32,9 @@ Component::Component(double firstValue, double secondValue, ComponentMode mode) 
     this->phase = std::arg(this->impedance);
 }
 
+// Semi-virtual functions (can't call a virtual function on constructor)
+void Component::calculateImpedance() {};
+void Component::calculateComponentValue() {};
 
 // Calculations of electrical characteristics
 void Component::calculatePowers() {

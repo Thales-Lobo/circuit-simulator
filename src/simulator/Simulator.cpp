@@ -1,4 +1,4 @@
-#include "Simulator.hpp"
+#include "simulator/Simulator.hpp"
 
 Simulator::Simulator(Circuit* circuit) : circuit(circuit) {
     // Precompute shared components

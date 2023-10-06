@@ -1,4 +1,4 @@
-#include "Inductor.hpp"
+#include "components/Inductor.hpp"
 
 // Constructor
 Inductor::Inductor(double firstValue, double secondValue, ComponentMode mode) 

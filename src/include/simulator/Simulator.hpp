@@ -1,7 +1,7 @@
 #ifndef SIMULATOR_HPP
 #define SIMULATOR_HPP
 
-#include "Circuit.hpp"
+#include "circuit/Circuit.hpp"
 #include <set>
 
 class Simulator {

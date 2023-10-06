@@ -1,7 +1,7 @@
 #ifndef CIRCUIT_HPP
 #define CIRCUIT_HPP
 
-#include "Mesh.hpp"
+#include "circuit/Mesh.hpp"
 
 class Circuit {
 private:

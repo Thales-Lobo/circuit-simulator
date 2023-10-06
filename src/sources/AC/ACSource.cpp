@@ -1,4 +1,4 @@
-#include "ACSource.hpp"
+#include "sources/AC/ACSource.hpp"
 #include <cmath>
 
 // Constructor using amplitude, frequency, and phase

@@ -1,4 +1,4 @@
-#include "Resistor.hpp"
+#include "components/Resistor.hpp"
 
 // Constructor
 Resistor::Resistor(double firstValue, double secondValue, ComponentMode mode) 

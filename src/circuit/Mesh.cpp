@@ -1,4 +1,4 @@
-#include "Mesh.hpp"
+#include "circuit/Mesh.hpp"
 
 // Constructor implementation
 Mesh::Mesh() {

@@ -1,4 +1,4 @@
-#include "ACVoltageSource.hpp"
+#include "sources/AC/ACVoltageSource.hpp"
 
 // Constructor using amplitude, frequency, and phase
 ACVoltageSource::ACVoltageSource(double amplitude, double frequency, double phase)

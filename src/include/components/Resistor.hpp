@@ -1,7 +1,7 @@
 #ifndef RESISTOR_HPP
 #define RESISTOR_HPP
 
-#include "Component.hpp"
+#include "components/Component.hpp"
 
 class Resistor : public Component {
 public:

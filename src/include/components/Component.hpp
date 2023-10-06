@@ -25,8 +25,8 @@ protected:
     double phase;
 
     // Protected functions
-    virtual void calculateImpedance()       = 0;
-    virtual void calculateComponentValue()  = 0;
+    virtual void calculateImpedance();
+    virtual void calculateComponentValue();
     void calculateVoltage();
     void calculatePowers();
 

@@ -1,4 +1,4 @@
-#include "ACCurrentSource.hpp"
+#include "sources/AC/ACCurrentSource.hpp"
 
 // Constructor using amplitude, frequency, and phase
 ACCurrentSource::ACCurrentSource(double amplitude, double frequency, double phase)

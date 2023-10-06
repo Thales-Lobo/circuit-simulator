@@ -1,4 +1,4 @@
-#include "Circuit.hpp"
+#include "circuit/Circuit.hpp"
 #include <Eigen/Dense>
 
 // Constructor
