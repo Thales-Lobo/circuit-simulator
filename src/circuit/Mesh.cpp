@@ -4,11 +4,11 @@
 Mesh::Mesh() {
     this->ACVoltageSources  = {};
     this->ACCurrentSources  = {};
-    this->components        = {};
+    this->loads        = {};
 }
 
-// Constructor with initial sources and components
-Mesh::Mesh(std::vector<Source*> sources, std::vector<Component*> components) {
+// Constructor with initial sources and loads
+Mesh::Mesh(std::vector<Source*> sources, std::vector<Load*> loads) {
     for (Source* source : sources) {
         // Checking the font type and adding to the corresponding list
         if (dynamic_cast<ACVoltageSource*>(source)) {
@@ -17,7 +17,7 @@ Mesh::Mesh(std::vector<Source*> sources, std::vector<Component*> components) {
             this->ACCurrentSources.push_back(dynamic_cast<ACCurrentSource*>(source));
         }
     }
-    this->components = components;
+    this->loads = loads;
 }
 
 // Add a AC voltage source to the mesh
@@ -30,9 +30,9 @@ void Mesh::addACCurrentSource(ACCurrentSource* ACCurrentSource) {
     this->ACCurrentSources.push_back(ACCurrentSource);
 }
 
-// Add a component to the mesh
-void Mesh::addComponent(Component* component) {
-    this->components.push_back(component);
+// Add a load to the mesh
+void Mesh::addLoad(Load* load) {
+    this->loads.push_back(load);
 }
 
 // Calculate total voltage of the mesh
@@ -49,26 +49,26 @@ std::complex<double> Mesh::calculateMeshVoltage() {
 // Calculate total impedance of the mesh
 std::complex<double> Mesh::calculateMeshImpedance() {
     std::complex<double> totalImpedance(0.0, 0.0);
-    for (Component* component : this->components) {
-        totalImpedance += component->getImpedance();
+    for (Load* load : this->loads) {
+        totalImpedance += load->getImpedance();
     }
     return totalImpedance;
 }
 
-// Return a vector with all mesh components
-std::vector<Component*> Mesh::getComponents() {
-    return this->components;
+// Return a vector with all mesh loads
+std::vector<Load*> Mesh::getLoads() {
+    return this->loads;
 }
 
-// Return a vector with all common components between two meshs
-std::vector<Component*> Mesh::commonComponents(Mesh* otherMesh) {
-    std::vector<Component*> commonComponents;
+// Return a vector with all common loads between two meshs
+std::vector<Load*> Mesh::commonLoads(Mesh* otherMesh) {
+    std::vector<Load*> commonLoads;
 
-    for (Component* component : this->components) {
-        if (std::find(otherMesh->components.begin(), otherMesh->components.end(), component) != otherMesh->components.end()) {
-            commonComponents.push_back(component);
+    for (Load* load : this->loads) {
+        if (std::find(otherMesh->loads.begin(), otherMesh->loads.end(), load) != otherMesh->loads.end()) {
+            commonLoads.push_back(load);
         }
     }
 
-    return commonComponents;
+    return commonLoads;
 }

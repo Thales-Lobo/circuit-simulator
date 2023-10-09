@@ -1,8 +1,7 @@
 #include "sources/AC/ACSource.hpp"
-#include <cmath>
 
 // Constructor using amplitude, frequency, and phase
-ACSource::ACSource(double amplitude, double phase, double frequency) {
+ACSource::ACSource(double amplitude, double frequency, double phase) {
     this->amplitude = amplitude;
     this->frequency = frequency;
     this->phase     = phase;

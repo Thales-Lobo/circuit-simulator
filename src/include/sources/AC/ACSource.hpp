@@ -5,6 +5,7 @@
 
 class ACSource : public Source {
 protected:
+    // Protected fields
     double amplitude;
     double frequency;
     double phase;

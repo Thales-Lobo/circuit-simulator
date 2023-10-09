@@ -12,7 +12,7 @@ Circuit::Circuit(std::vector<Mesh*> meshes) {
 
 // Add a mesh to the circuit
 void Circuit::addMesh(Mesh* mesh) {
-    meshes.push_back(mesh);  
+    this->meshes.push_back(mesh);  
 }
 
 // Return a vector with all circuit meshes
@@ -40,11 +40,11 @@ void Circuit::solveMeshCurrents() {
                 // Main diagonal
                 impedanceMatrix(row, column) = mesh->calculateMeshImpedance();  
             } else {
-                std::vector<Component*> commonComponents    = mesh->commonComponents(meshes[column]);
+                std::vector<Load*> commonLoads    = mesh->commonLoads(meshes[column]);
                 std::complex<double> totalCommonImpedance   = 0.0;
 
-                for (Component* component : commonComponents) {
-                    totalCommonImpedance += component->getImpedance();
+                for (Load* load : commonLoads) {
+                    totalCommonImpedance += load->getImpedance();
                 }
 
                 impedanceMatrix(row, column) = -totalCommonImpedance;
@@ -60,6 +60,6 @@ void Circuit::solveMeshCurrents() {
     // Update the meshCurrents field
     meshCurrents.clear();
     for (int index = 0; index < numMeshes; index++) {
-        meshCurrents.push_back(currentVector(index));
+        this->meshCurrents.push_back(currentVector(index));
     }
 }

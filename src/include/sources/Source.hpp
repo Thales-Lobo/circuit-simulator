@@ -2,6 +2,7 @@
 #define SOURCE_HPP
 
 #include <complex>
+#include <cmath>
 
 class Source {
 public:
