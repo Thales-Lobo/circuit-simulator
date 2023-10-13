@@ -4,6 +4,9 @@
 // Includes
 #include <vector>
 #include <algorithm>
+#include <unordered_set>
+#include "sources/DC/DCVoltageSource.hpp"
+#include "sources/DC/DCCurrentSource.hpp"
 #include "sources/AC/ACVoltageSource.hpp"
 #include "sources/AC/ACCurrentSource.hpp"
 #include "load/Load.hpp"
@@ -11,8 +14,7 @@
 class Mesh {
 private:
     // Loads in this mesh
-    std::vector<ACVoltageSource*> ACVoltageSources;
-    std::vector<ACCurrentSource*> ACCurrentSources;
+    std::vector<Source*> sources;
     std::vector<Load*> loads;  
     
 public:
@@ -20,20 +22,20 @@ public:
     Mesh();
     Mesh(std::vector<Source*> sources, std::vector<Load*> loads);
 
-    // Add a AC voltage source to the mesh
-    void addACVoltageSource(ACVoltageSource* ACVoltageSource); 
-    // Add a AC current source to the mesh
-    void addACCurrentSource(ACCurrentSource* ACCurrentSource);
+    // Add a source to the mesh
+    void Mesh::addSource(Source* source);
     // Add a load to the mesh
     void addLoad(Load* load);
     // Calculate total voltage of the mesh
-    std::complex<double> calculateMeshVoltage();
+    std::complex<double> calculateMeshVoltage() const;
     // Calculate total impedance of the mesh
-    std::complex<double> calculateMeshImpedance(); 
+    std::complex<double> calculateMeshImpedance() const; 
     // Return a vector with all mesh loads
-    std::vector<Load*> getLoads();
+    std::vector<Load*> getLoads() const;
+    // Return a vector with all mesh sources
+    std::vector<Source*> Mesh::getSources() const;
     // Return a vector with all common loads between two meshs
-    std::vector<Load*> commonLoads(Mesh* otherMesh);
+    std::vector<Load*> commonLoads(const Mesh* otherMesh) const;
 };
 
 #endif // MESH_HPP

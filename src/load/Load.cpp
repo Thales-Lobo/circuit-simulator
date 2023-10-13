@@ -1,92 +1,71 @@
 #include "load/Load.hpp"
 
-// Constructor
-Load::Load() {};
+// Default constructor
+Load::Load() = default;
 
+// Constructor using value representation mode
 Load::Load(double firstValue, double secondValue, RepresentationMode mode) {
-    // Use a switch to determine the load's construction mode
     switch (mode) {
-        // If the mode is RECTANGULAR, assumes that the values ​​provided are the real and imaginary part of the impedance
         case RepresentationMode::RECTANGULAR:
-            this->impedance = std::complex<double>(firstValue, secondValue);
+            impedance = {firstValue, secondValue};
             break;
 
-        // If the mode is POLAR_DEGREES, assumes that the values ​​provided are magnitude and phase (in degrees) of the impedance
         case RepresentationMode::POLAR_DEGREES: 
-            this->impedance = std::polar(firstValue, secondValue * std::acos(-1) / 180.0);
+            impedance = std::polar(firstValue, secondValue * PI / 180.0);
             break;
 
-        // If the mode is POLAR_RADIANS, assumes that the values ​​provided are magnitude and phase (in radians) of the impedance
         case RepresentationMode::POLAR_RADIANS:
-            this->impedance = std::polar(firstValue, secondValue);
+            impedance = std::polar(firstValue, secondValue);
             break;
     }
-    this->phase = std::arg(this->impedance);
+    phase = std::arg(impedance);
 }
 
-// Calculations of electrical characteristics
+// Calculate voltage and powers
 void Load::calculateVoltage() {
-    this->voltage = this->impedance * this->current;
+    voltage = impedance * current;
     calculatePowers();
 }
 
 void Load::calculatePowers() {
-    this->complexPower  = this->voltage * std::conj(this->current);
-    this->activePower   = this->complexPower.real();
-    this->reactivePower = this->complexPower.imag();
+    complexPower  = voltage * std::conj(current);
+    activePower   = complexPower.real();
+    reactivePower = complexPower.imag();
 }
 
 // Getters
-std::complex<double> Load::getImpedance() {
+std::complex<double> Load::getImpedance() const {
     return impedance;
 }
 
-std::complex<double> Load::getVoltage() {
+std::complex<double> Load::getVoltage() const {
     return voltage;
 }
 
-std::complex<double> Load::getCurrent() {
+std::complex<double> Load::getCurrent() const {
     return current;
 }
 
-std::complex<double> Load::getComplexPower() {
+std::complex<double> Load::getComplexPower() const {
     return complexPower;
 }
 
-double Load::getActivePower() {
+double Load::getActivePower() const {
     return activePower;
 }
 
-double Load::getReactivePower() {
+double Load::getReactivePower() const {
     return reactivePower;
 }
 
-double Load::getPhase() {
+double Load::getPhase() const {
     return phase;
 }
 
-// Setters
-void Load::setVoltage(std::complex<double> voltage) {
-    this->voltage = voltage;
-}
-
-void Load::setCurrent(std::complex<double> current) {
-    this->current = current;
-    calculateVoltage();
-}
-
-void Load::setComplexPower(std::complex<double> complexPower) {
-    this->complexPower = complexPower;
-}
-
-void Load::setActivePower(double activePower) {
-    this->activePower = activePower;
-}
-
-void Load::setReactivePower(double reactivePower) {
-    this->reactivePower = reactivePower;
-}
-
-void Load::setPhase(double phase) {
-    this->phase = phase;
+// Setter for current
+void Load::setCurrent(std::complex<double> newCurrent) {
+    if (current != newCurrent) {
+        current = newCurrent;
+        calculateVoltage();
+    }
 }

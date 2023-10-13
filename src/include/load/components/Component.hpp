@@ -15,8 +15,8 @@ public:
     Component(double componentValue, double angularFrequency);
     
     // Getters
-    double getComponentValue();
-    double getAngularFrequency();
+    double getComponentValue() const;
+    double getAngularFrequency() const;
     
     // Setters
     void setComponentValue(double componentValue);

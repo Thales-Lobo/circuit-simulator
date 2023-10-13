@@ -1,6 +1,7 @@
 #ifndef LOAD_HPP
 #define LOAD_HPP
 
+#include "constants/Constants.hpp"
 #include <complex>
 
 class Load {
@@ -29,23 +30,21 @@ public:
     // Constructors
     Load();
     Load(double firstValue, double secondValue, RepresentationMode mode = RepresentationMode::POLAR_DEGREES);
+
+    // Destructors
+    virtual ~Load() = default;
     
     // Getters
-    std::complex<double> getImpedance();
-    std::complex<double> getVoltage();
-    std::complex<double> getCurrent();
-    std::complex<double> getComplexPower();
-    double getActivePower();
-    double getReactivePower();
-    double getPhase();
+    std::complex<double> getImpedance() const;
+    std::complex<double> getVoltage() const;
+    std::complex<double> getCurrent() const;
+    std::complex<double> getComplexPower() const;
+    double getActivePower() const;
+    double getReactivePower() const;
+    double getPhase() const;
     
     // Setters
-    void setVoltage(std::complex<double> voltage);
     void setCurrent(std::complex<double> current);
-    void setComplexPower(std::complex<double> complexPower);
-    void setActivePower(double activePower);
-    void setReactivePower(double reactivePower);
-    void setPhase(double phase);
 };
 
 #endif // LOAD_HPP

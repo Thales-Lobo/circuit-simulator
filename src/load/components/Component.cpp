@@ -1,27 +1,35 @@
 #include "load/components/Component.hpp"
 
-// Constructor
-Component::Component(){};
+// Default constructor
+Component::Component() = default;
 
-Component::Component(double componentValue, double angularFrequency) {
-    this->componentValue    = componentValue;
-    this->angularFrequency  = angularFrequency;
+// Constructor using component value and angular frequency
+Component::Component(double componentValue, double angularFrequency)
+    : componentValue(componentValue), angularFrequency(angularFrequency) {
+    
+    if (angularFrequency == 0.0) {
+        throw std::runtime_error("Angular frequency cannot be zero!");
+    }
+
+    if (componentValue == 0.0) {
+        throw std::runtime_error("Component value cannot be zero!");
+    }
 }
 
 // Getters
-double Component::getComponentValue() {
+double Component::getComponentValue() const {
     return componentValue;
 }
 
-double Component::getAngularFrequency() {
+double Component::getAngularFrequency() const {
     return angularFrequency;
 }
 
 // Setters
-void Component::setComponentValue(double componentValue) {
-    this->componentValue = componentValue;
+void Component::setComponentValue(double newComponentValue) {
+    componentValue = newComponentValue;
 }
 
-void Component::setAngularFrequency(double angularFrequency) {
-    this->angularFrequency = angularFrequency;
+void Component::setAngularFrequency(double newAngularFrequency) {
+    angularFrequency = newAngularFrequency;
 }

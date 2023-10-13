@@ -5,8 +5,10 @@
 
 class ACVoltageSource : public ACSource {
 public:
-    ACVoltageSource(double amplitude, double frequency, double phase);
-    ACVoltageSource(std::complex<double> phasor, double frequency); 
+    // Constructor using amplitude, frequency, and phase
+    ACVoltageSource(double firstValue, double secondValue, double thirdValue, 
+                    ACSource::ValueRepresentation valueMode = ACSource::ValueRepresentation::POLAR_DEGREES, 
+                    ACSource::FrequencyRepresentation freqMode = ACSource::FrequencyRepresentation::FREQUENCY);
 };
 
 #endif // ACVOLTAGESOURCE_HPP

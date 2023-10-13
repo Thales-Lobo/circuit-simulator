@@ -1,9 +1,7 @@
 #include "sources/AC/ACVoltageSource.hpp"
 
 // Constructor using amplitude, frequency, and phase
-ACVoltageSource::ACVoltageSource(double amplitude, double frequency, double phase)
-    : ACSource(amplitude, frequency, phase) {}
-
-// Constructor using phasor and frequency
-ACVoltageSource::ACVoltageSource(std::complex<double> phasor, double frequency)
-    : ACSource(phasor, frequency) {}
+ACVoltageSource::ACVoltageSource(double firstValue, double secondValue, double thirdValue, 
+                                 ACSource::ValueRepresentation valueMode, 
+                                 ACSource::FrequencyRepresentation freqMode)
+    : ACSource(firstValue, secondValue, thirdValue, valueMode, freqMode) {}

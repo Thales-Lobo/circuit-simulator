@@ -5,15 +5,32 @@
 
 class ACSource : public Source {
 protected:
+    // Protected classes
+    enum class ValueRepresentation {
+        RECTANGULAR,
+        POLAR_DEGREES,
+        POLAR_RADIANS
+    };
+    enum class FrequencyRepresentation {
+        FREQUENCY,
+        ANGULAR_FREQUENCY
+    };
+
     // Protected fields
     double amplitude;
     double frequency;
+    double angularFrequency;
     double phase;
     std::complex<double> phasor;
 
 public:
-    ACSource(double amplitude, double frequency, double phase);
-    ACSource(std::complex<double> phasor, double frequency);
+    // Constructor
+    ACSource(double firstValue, double secondValue, double thirdValue, 
+                        ValueRepresentation valueMode = ValueRepresentation::POLAR_DEGREES, 
+                        FrequencyRepresentation freqMode = FrequencyRepresentation::FREQUENCY);
+
+    // Functions
+    virtual double getFrequency();
     virtual std::complex<double> getValue();
 };
 

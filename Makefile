@@ -2,7 +2,7 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -Wall -Wextra -mconsole -std=c++11 -Isrc/include
+CXXFLAGS = -Wall -Wextra -std=c++11 -Isrc/include
 
 # Source directories
 SRC_DIRS = src src/circuit src/components src/sources src/simulator src/test

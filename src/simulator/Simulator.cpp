@@ -7,9 +7,11 @@ Simulator::Simulator(Circuit* circuit) : circuit(circuit) {
 
 // List all shared loads on the circuit
 void Simulator::computeSharedLoads() {
+    std::unordered_map<Load*, int> loadCount;
     for (Mesh* mesh : circuit->getMeshes()) {
         for (Load* load : mesh->getLoads()) {
-            if (isSharedLoad(load)) {
+            loadCount[load]++;
+            if (loadCount[load] == 2) {
                 sharedLoads.insert(load);
             }
         }
@@ -19,54 +21,37 @@ void Simulator::computeSharedLoads() {
 // Calculate the mesh currents
 void Simulator::runSimulation() {
     circuit->solveMeshCurrents();
-    std::vector<std::complex<double>> meshCurrents = circuit->getMeshCurrents();
+    const auto& meshCurrents = circuit->getMeshCurrents();
+    const auto& meshes = circuit->getMeshes();
 
-    // Assign currents and voltages to loads
-    int numMeshes = circuit->getMeshes().size();
-    for (int index = 0; index < numMeshes; index++) {
-        Mesh* mesh = circuit->getMeshes()[index];
+    for (size_t index = 0; index < meshes.size(); ++index) {
+        Mesh* mesh = meshes[index];
         std::complex<double> meshCurrent = meshCurrents[index];
 
         for (Load* load : mesh->getLoads()) {
-            // If the load is unique to this mesh
             if (sharedLoads.find(load) == sharedLoads.end()) {
                 load->setCurrent(meshCurrent);
             } else {
-                // If the load is shared with another mesh
                 int otherMeshIndex = getOtherMeshIndex(load, index);
                 std::complex<double> otherMeshCurrent = meshCurrents[otherMeshIndex];
-                std::complex<double> loadCurrent = meshCurrent - otherMeshCurrent;
-
-                load->setCurrent(loadCurrent);
+                load->setCurrent(meshCurrent - otherMeshCurrent);
             }
         }
     }
 }
 
 // Implement logic to check if a load is shared between two meshes
-bool Simulator::isSharedLoad(Load* load) {
-    int loadCounter = 0;
-    for (Mesh* mesh : circuit->getMeshes()) {
-        if (std::find(mesh->getLoads().begin(), mesh->getLoads().end(), load) != mesh->getLoads().end()) {
-            loadCounter++;
-            // A load can only be in a maximum of 2 meshes at the same time
-            if (loadCounter == 2) {
-                return true;
-            }
-        }
-    }
-    return false;
+bool Simulator::isSharedLoad(Load* load) const {
+    return sharedLoads.find(load) != sharedLoads.end();
 }
 
 // Implement the logic to obtain the index of the other mesh that shares this load
-int Simulator::getOtherMeshIndex(Load* load, int currentMeshIndex) {
-    int index = 0;
-    for (Mesh* mesh : circuit->getMeshes()) {
-        if (index != currentMeshIndex && std::find(mesh->getLoads().begin(), mesh->getLoads().end(), load) != mesh->getLoads().end()) {
-            return index;
+int Simulator::getOtherMeshIndex(Load* load, int currentMeshIndex) const {
+    const auto& meshes = circuit->getMeshes();
+    for (size_t index = 0; index < meshes.size(); ++index) {
+        if (index != currentMeshIndex && isSharedLoad(load)) {
+            return static_cast<int>(index);
         }
-        index++;
     }
-
     throw std::runtime_error("Other mesh not found for shared load!");
 }
