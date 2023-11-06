@@ -1,0 +1,89 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# C++ build directories
+bin/
+obj/
+build/
+*.o
+*.d
+*.so
+*.a
+*.log
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.sdf
+*.cache
+*.opendb
+*.opensdf
+*.tlog
+*.exe
+*.out
+*.iobj
+*.ipdb
+*.ilk
+*.map
+*.exp
+*.lib
+*.bsc
+*.pdb
+*.idb
+Debug/
+Release/
+x64/
+x86/
+*.sublime-workspace
+
+# WebAssembly build files
+*.wasm
+*.wat
+
+# Package dependency directories
+node_modules/
+jspm_packages/
+bower_components/
+
+# Log files
+npm-debug.log
+yarn-error.log
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Distribution / build directories
+/dist
+/build
+
+# Cache directories and files
+.cache/
+*.cache
+*.bak
+*.swp
+*.tmp
+
+# IDE specific configuration files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+*.sw?
+
+# Package lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Test coverage files
+coverage/
+*.lcov
+
+# Generated documentation files
+docs/gen/

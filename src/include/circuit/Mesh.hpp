@@ -1,40 +1,94 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-// Includes
 #include <vector>
 #include <algorithm>
 #include <unordered_set>
-#include "sources/DC/DCVoltageSource.hpp"
-#include "sources/DC/DCCurrentSource.hpp"
-#include "sources/AC/ACVoltageSource.hpp"
-#include "sources/AC/ACCurrentSource.hpp"
+#include <complex>
+#include "sources/Source.hpp"
+#include "sources/VoltageSource.hpp"
+#include "sources/CurrentSource.hpp"
 #include "load/Load.hpp"
 
+/**
+ * @brief The Mesh class represents an electrical circuit mesh.
+ * 
+ * A mesh is a loop that does not contain any other loops within it.
+ * This class manages the sources and loads within a single mesh and
+ * provides methods to calculate the total voltage, impedance, and
+ * to retrieve the sources and loads.
+ */
 class Mesh {
 private:
-    // Loads in this mesh
-    std::vector<Source*> sources;
-    std::vector<Load*> loads;  
-    
+    std::vector<Source*> sources; ///< Sources in this mesh
+    std::vector<Load*> loads;     ///< Loads in this mesh
+
 public:
-    // Constructors
+    /**
+     * @brief Default constructor for Mesh.
+     * 
+     * Initializes an empty mesh with no sources or loads.
+     */
     Mesh();
+
+    /**
+     * @brief Parameterized constructor for Mesh.
+     * 
+     * Initializes a mesh with the given sources and loads.
+     * 
+     * @param sources Vector of pointers to Source objects.
+     * @param loads Vector of pointers to Load objects.
+     */
     Mesh(std::vector<Source*> sources, std::vector<Load*> loads);
 
-    // Add a source to the mesh
-    void Mesh::addSource(Source* source);
-    // Add a load to the mesh
+    /**
+     * @brief Adds a source to the mesh.
+     * 
+     * @param source Pointer to the Source object to add.
+     */
+    void addSource(Source* source);
+
+    /**
+     * @brief Adds a load to the mesh.
+     * 
+     * @param load Pointer to the Load object to add.
+     */
     void addLoad(Load* load);
-    // Calculate total voltage of the mesh
+
+    /**
+     * @brief Calculates the total voltage of the mesh.
+     * 
+     * @return The total voltage as a complex number.
+     */
     std::complex<double> calculateMeshVoltage() const;
-    // Calculate total impedance of the mesh
-    std::complex<double> calculateMeshImpedance() const; 
-    // Return a vector with all mesh loads
+
+    /**
+     * @brief Calculates the total impedance of the mesh.
+     * 
+     * @return The total impedance as a complex number.
+     */
+    std::complex<double> calculateMeshImpedance() const;
+
+    /**
+     * @brief Retrieves all loads in the mesh.
+     * 
+     * @return A vector of pointers to Load objects.
+     */
     std::vector<Load*> getLoads() const;
-    // Return a vector with all mesh sources
-    std::vector<Source*> Mesh::getSources() const;
-    // Return a vector with all common loads between two meshs
+
+    /**
+     * @brief Retrieves all sources in the mesh.
+     * 
+     * @return A vector of pointers to Source objects.
+     */
+    std::vector<Source*> getSources() const;
+
+    /**
+     * @brief Finds common loads between this mesh and another mesh.
+     * 
+     * @param otherMesh Pointer to another Mesh object.
+     * @return A vector of pointers to Load objects that are common between the two meshes.
+     */
     std::vector<Load*> commonLoads(const Mesh* otherMesh) const;
 };
 

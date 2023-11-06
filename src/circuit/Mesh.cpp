@@ -24,8 +24,8 @@ std::complex<double> Mesh::calculateMeshVoltage() const {
     std::complex<double> totalVoltage(0.0, 0.0);
     
     for (const auto& source : sources) {
-        if (auto voltageSource = dynamic_cast<ACVoltageSource*>(source)) {
-            totalVoltage += voltageSource->getValue();
+        if (auto voltageSource = dynamic_cast<VoltageSource*>(source)) {
+            totalVoltage += voltageSource->getVoltage();
         }
     }
     return totalVoltage;
