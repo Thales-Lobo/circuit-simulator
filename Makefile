@@ -1,6 +1,6 @@
-public/adder.wasm: src_cpp/adder.mjs
-src_cpp/adder.mjs: src_cpp/adder.cpp
-	@docker run \
+public/adder.wasm: components/AdderWrapper/adder.mjs
+components/AdderWrapper/adder.mjs: src_cpp/adder.cpp
+	docker run \
 		--rm \
 		-v $(shell pwd)/src_cpp:/src \
 		emscripten/emsdk \
