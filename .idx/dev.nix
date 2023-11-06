@@ -6,6 +6,7 @@
     pkgs.cmake
     pkgs.emscripten
     pkgs.yarn
+    pkgs.docker
   ];
   idx.extensions = [
   ];
@@ -19,4 +20,5 @@
       }
     ];
   };
+  services.docker.enable = true;
 }

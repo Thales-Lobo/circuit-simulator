@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, Tooltip } from 'antd';
 
 import dynamic from "next/dynamic";
+import useAdder from '@/components/AdderWrapper/AdderWrapper';
 
 interface CComponent {
   adder: (a:number, b:number) => number;
@@ -67,21 +68,11 @@ const Home = () => {
 
   const [sum, setSum] = useState<number | undefined>();
   
-  const handleClick = () => {
-    if(module.current) {
-      setSum(module.current.adder(Number(value1), Number(value2)));
-    }
-  }
-  
-  useEffect(() => {
-    const loadWasm = async () => {
-      // @ts-ignore
-      const wasmModule = await import('../src_cpp/adder_plumbing.wasm') as CComponent;
-      module.current = wasmModule;
-    }
+  const { adder } = useAdder();
 
-    loadWasm();
-  }, []);
+  const handleClick = () => {
+      setSum(adder(Number(value1), Number(value2)));
+  }
   
   return (
     <div style={{margin: '20px', padding: '10px'}}>
