@@ -1,42 +1,22 @@
-# Compiler to be used
-CXX = g++
+public/adder.wasm: components/AdderWrapper/adder.mjs
+components/AdderWrapper/adder.mjs: src_cpp/adder.cpp
+	docker run \
+		--rm \
+		-v $(shell pwd)/src_cpp:/src \
+		emscripten/emsdk \
+		emcc --no-entry adder.cpp \
+		-o adder.mjs \
+		--pre-js locateFile.js \
+		-s ENVIRONMENT='web' \
+		-s EXPORT_NAME='createModule' \
+		-s USE_ES6_IMPORT_META=0 \
+		-s EXPORTED_FUNCTIONS='["_adder"]' \
+		-s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]'  \
+		-O3
 
-# Compiler flags
-CXXFLAGS = -Wall -Wextra -std=c++11 -Isrc/include
+	mv src_cpp/adder.mjs components/AdderWrapper/adder.mjs
+	mv src_cpp/adder.wasm public/adder.wasm
 
-# Source directories
-SRC_DIRS = src src/circuit src/components src/sources src/simulator src/test
-
-# Automatically find all the source files in the specified source directories
-SOURCES = $(shell find $(SRC_DIRS) -name *.cpp)
-
-# List of object files, placed in the obj directory
-OBJ_DIR = obj
-OBJECTS = $(SOURCES:%.cpp=$(OBJ_DIR)/%.o)
-
-# The final executable name
-BIN_DIR = bin
-EXECUTABLE = $(BIN_DIR)/circuit_simulator
-
-# Default target
-all: directories $(EXECUTABLE)
-
-# Create the necessary directories
-directories:
-	mkdir -p $(OBJ_DIR) $(BIN_DIR)
-
-# Compiling each source file to an object file
-$(OBJ_DIR)/%.o: %.cpp
-	mkdir -p $(dir $@)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-# Linking the object files to produce the executable
-$(EXECUTABLE): $(OBJECTS)
-	$(CXX) $^ -o $@
-
-# Clean target
+.PHONY: clean
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
-
-# Phony targets
-.PHONY: all clean directories
+	rm public/adder.wasm components/AdderWrapper/adder.mjs
