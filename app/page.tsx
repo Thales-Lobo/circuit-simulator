@@ -61,8 +61,6 @@ const NumericInput = (props: NumericInputProps) => {
 };
 
 const Home = () => {
-  
-  const module = useRef<CComponent | undefined>();
   const [value1, setValue1 ] = useState<string>('');
   const [value2, setValue2 ] = useState<string>('');
 
