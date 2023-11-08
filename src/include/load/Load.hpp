@@ -14,7 +14,7 @@
  */
 
 class Load {
-protected:
+public:
     /**
      * @enum RepresentationMode
      * 
@@ -41,9 +41,9 @@ protected:
     void calculateVoltage();        ///< Calculates the voltage across the load based on current and impedance.
     void calculatePowers();         ///< Calculates the powers (active, reactive, complex) of the load.
 
-public:
     // Constructors
     Load(); ///< Default constructor that initializes a Load object with default values.
+
     /**
      * @brief Parameterized constructor for Load class.
      * 

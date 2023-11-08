@@ -1,8 +1,8 @@
 #include "sources/DC/DCVoltageSource.hpp"
 
 // Constructor
-DCVoltageSource::DCVoltageSource(double value)
-    : DCSource(value) {
+DCVoltageSource::DCVoltageSource(double value, Load internalLoad)
+    : DCSource(value, internalLoad) {
         voltage = value;
     }
 

@@ -3,8 +3,9 @@
 // Constructor using amplitude, frequency, and phase
 ACCurrentSource::ACCurrentSource(double firstValue, double secondValue, double thirdValue, 
                                  ACSource::ValueRepresentation valueMode, 
-                                 ACSource::FrequencyRepresentation freqMode)
-    : ACSource(firstValue, secondValue, thirdValue, valueMode, freqMode) {
+                                 ACSource::FrequencyRepresentation freqMode,
+                                 Load internalLoad)
+    : ACSource(firstValue, secondValue, thirdValue, valueMode, freqMode, internalLoad) {
         current = value;
     }
 

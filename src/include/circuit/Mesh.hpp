@@ -42,6 +42,20 @@ public:
     Mesh(std::vector<Source*> sources, std::vector<Load*> loads);
 
     /**
+     * @brief Retrieves all loads in the mesh.
+     * 
+     * @return A vector of pointers to Load objects.
+     */
+    std::vector<Load*> getLoads() const;
+
+    /**
+     * @brief Retrieves all sources in the mesh.
+     * 
+     * @return A vector of pointers to Source objects.
+     */
+    std::vector<Source*> getSources() const;
+
+    /**
      * @brief Adds a source to the mesh.
      * 
      * @param source Pointer to the Source object to add.
@@ -68,20 +82,6 @@ public:
      * @return The total impedance as a complex number.
      */
     std::complex<double> calculateMeshImpedance() const;
-
-    /**
-     * @brief Retrieves all loads in the mesh.
-     * 
-     * @return A vector of pointers to Load objects.
-     */
-    std::vector<Load*> getLoads() const;
-
-    /**
-     * @brief Retrieves all sources in the mesh.
-     * 
-     * @return A vector of pointers to Source objects.
-     */
-    std::vector<Source*> getSources() const;
 
     /**
      * @brief Finds common loads between this mesh and another mesh.

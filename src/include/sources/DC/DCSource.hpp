@@ -33,7 +33,7 @@ public:
      * @param value The magnitude of the DC source (voltage or current).
      * @param internalLoad The internal load of the source, defaulting to an impedance of 0.0.
      */
-    DCSource(double value, Load internalLoad = Load(0.0, 0.0));
+    DCSource(double value, Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
     /**
      * @brief Virtual destructor for the DCSource class.

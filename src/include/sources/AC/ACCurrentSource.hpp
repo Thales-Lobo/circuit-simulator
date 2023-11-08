@@ -1,8 +1,8 @@
 #ifndef ACCURRENTSOURCE_HPP
 #define ACCURRENTSOURCE_HPP
 
-#include "sources/AC/ACSource.hpp"
 #include "sources/CurrentSource.hpp"
+#include "sources/AC/ACSource.hpp"
 
 /**
  * @file ACCurrentSource.hpp
@@ -28,7 +28,8 @@ public:
      */
     ACCurrentSource(double firstValue, double secondValue, double thirdValue, 
                     ACSource::ValueRepresentation valueMode = ACSource::ValueRepresentation::POLAR_DEGREES, 
-                    ACSource::FrequencyRepresentation freqMode = ACSource::FrequencyRepresentation::FREQUENCY);
+                    ACSource::FrequencyRepresentation freqMode = ACSource::FrequencyRepresentation::FREQUENCY,
+                    Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
     /**
      * @brief Sets the voltage across the AC current source.

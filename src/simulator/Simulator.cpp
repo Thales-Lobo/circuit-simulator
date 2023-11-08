@@ -1,17 +1,18 @@
 #include "simulator/Simulator.hpp"
 
 Simulator::Simulator(Circuit* circuit) : circuit(circuit) {
-    // Precompute shared loads
+    if (!circuit) {
+        throw std::invalid_argument("Circuit pointer cannot be null.");
+    }
     computeSharedLoads();
 }
 
 // List all shared loads on the circuit
 void Simulator::computeSharedLoads() {
     std::unordered_map<Load*, size_t> loadCount;
-    for (Mesh* mesh : circuit->getMeshes()) {
-        for (Load* load : mesh->getLoads()) {
-            loadCount[load]++;
-            if (loadCount[load] == 2) {
+    for (const auto& mesh : circuit->getMeshes()) {
+        for (const auto& load : mesh->getLoads()) {
+            if (++loadCount[load] == 2) {
                 sharedLoads.insert(load);
             }
         }

@@ -1,8 +1,8 @@
 #include "sources/DC/DCCurrentSource.hpp"
 
 // Constructor
-DCCurrentSource::DCCurrentSource(double value)
-    : DCSource(value) {
+DCCurrentSource::DCCurrentSource(double value, Load internalLoad)
+    : DCSource(value, internalLoad) {
         current = value;
     }
 

@@ -1,54 +1,62 @@
 // Constants includes
 #include "constants/Constants.hpp"
+
 // Sources includes
 #include "sources/DC/DCVoltageSource.hpp"
 #include "sources/DC/DCCurrentSource.hpp"
 #include "sources/AC/ACVoltageSource.hpp"
 #include "sources/AC/ACCurrentSource.hpp"
+
 // Loads includes
 #include "load/Load.hpp"
 #include "load/components/Resistor.hpp"
 #include "load/components/Inductor.hpp"
 #include "load/components/Capacitor.hpp"
+
 // Circuits includes
 #include "circuit/Mesh.hpp"
 #include "circuit/Circuit.hpp"
 #include "simulator/Simulator.hpp"
+
 // General C++ includes
 #include <iostream>
 #include <vector>
 #include <complex>
-#include <memory>
 
 // Function prototypes for creating components
-std::unique_ptr<ACVoltageSource> createACVoltageSource(double magnitude, double phase, double frequency);
-std::unique_ptr<Load> createLoad(double magnitude, double phase);
-std::unique_ptr<Mesh> createMesh(const std::vector<Source*>& sources, const std::vector<Load*>& loads);
-std::unique_ptr<Circuit> createCircuit(const std::vector<Mesh*>& meshes);
+ACVoltageSource* createACVoltageSource(double magnitude, double phase, double frequency);
+Load* createLoad(double magnitude, double phase);
+Mesh* createMesh(const std::vector<Source*>& sources, const std::vector<Load*>& loads);
+Circuit* createCircuit(const std::vector<Mesh*>& meshes);
 void printMatrix(const Eigen::MatrixXcd& matrix);
 void printVector(const Eigen::VectorXcd& vector);
 
 // Function definitions for creating components
-std::unique_ptr<ACVoltageSource> createACVoltageSource(double magnitude, double phase, double frequency) {
-    return std::make_unique<ACVoltageSource>(magnitude, phase, frequency);
+// Creates an AC voltage source
+ACVoltageSource* createACVoltageSource(double magnitude, double phase, double frequency) {
+    return new ACVoltageSource(magnitude, phase, frequency);
 }
 
-std::unique_ptr<Load> createLoad(double magnitude, double phase) {
-    return std::make_unique<Load>(magnitude, phase);
+// Creates a load with specified magnitude and phase
+Load* createLoad(double magnitude, double phase) {
+    return new Load(magnitude, phase);
 }
 
-std::unique_ptr<Mesh> createMesh(const std::vector<Source*>& sources, const std::vector<Load*>& loads) {
-    return std::make_unique<Mesh>(sources, loads);
+// Creates a mesh from given sources and loads
+Mesh* createMesh(const std::vector<Source*>& sources, const std::vector<Load*>& loads) {
+    return new Mesh(sources, loads);
 }
 
-std::unique_ptr<Circuit> createCircuit(const std::vector<Mesh*>& meshes) {
-    return std::make_unique<Circuit>(meshes);
+// Creates a circuit from a collection of meshes
+Circuit* createCircuit(const std::vector<Mesh*>& meshes) {
+    return new Circuit(meshes);
 }
 
+// Prints a matrix to the console
 void printMatrix(const Eigen::MatrixXcd& matrix) {
-    for (int i = 0; i < matrix.rows(); ++i) {
-        for (int j = 0; j < matrix.cols(); ++j) {
-            std::complex<double> val = matrix(i, j);
+    for (int row = 0; row < matrix.rows(); ++row) {
+        for (int column = 0; column < matrix.cols(); ++column) {
+            std::complex<double> val = matrix(row, column);
             std::cout << "(" << val.real();
             if (val.imag() >= 0) std::cout << "+";
             std::cout << val.imag() << "i) ";
@@ -58,9 +66,10 @@ void printMatrix(const Eigen::MatrixXcd& matrix) {
     std::cout << std::endl;
 }
 
+// Prints a vector to the console
 void printVector(const Eigen::VectorXcd& vector) {
-    for (int i = 0; i < vector.size(); ++i) {
-        std::complex<double> val = vector(i);
+    for (int index = 0; index < vector.size(); ++index) {
+        std::complex<double> val = vector(index);
         std::cout << "(" << val.real();
         if (val.imag() >= 0) std::cout << "+";
         std::cout << val.imag() << "i) ";
@@ -69,38 +78,42 @@ void printVector(const Eigen::VectorXcd& vector) {
 }
 
 int main() {
-    // Creating voltage sources
-    auto voltageSource1 = createACVoltageSource(60.0, 20.0, 60.0); // 60V, 20°, 60Hz
-    auto voltageSource2 = createACVoltageSource(-10.0, 70.0, 60.0); // -10V, 70°, 60Hz
+    // Create voltage sources
+    ACVoltageSource* voltageSource1 = createACVoltageSource(60.0, 20.0, 60.0); // 60V, 20°, 60Hz
+    ACVoltageSource* voltageSource2 = createACVoltageSource(-10.0, 70.0, 60.0); // -10V, 70°, 60Hz
 
-    // Creating loads
-    auto load1 = createLoad(30.0, 30.0); // 30/_30° ohms
-    auto load2 = createLoad(40.0, 60.0); // 40/_60° ohms
-    auto load3 = createLoad(15.0, 20.0); // 15/_20° ohms
+    // Create loads
+    Load* load1 = createLoad(30.0, 30.0); // 30 ohms at 30°
+    Load* load2 = createLoad(40.0, 60.0); // 40 ohms at 60°
+    Load* load3 = createLoad(15.0, 20.0); // 15 ohms at 20°
 
-    // Creating the first mesh with the loads
-    std::vector<Source*> sources1 = {voltageSource1.get()};
-    std::vector<Load*> loads1 = {load1.get(), load3.get()};
+    // Create the first mesh with the loads
+    std::vector<Source*> sources1 = {voltageSource1};
+    std::vector<Load*> loads1 = {load1, load3};
 
-    std::vector<Source*> sources2 = {voltageSource2.get()};
-    std::vector<Load*> loads2 = {load3.get(), load2.get()};
+    // Create the second mesh with the loads
+    std::vector<Source*> sources2 = {voltageSource2};
+    std::vector<Load*> loads2 = {load3, load2};
 
-    auto mesh1 = createMesh(sources1, loads1);
-    auto mesh2 = createMesh(sources2, loads2);
+    // Create meshes
+    Mesh* mesh1 = createMesh(sources1, loads1);
+    Mesh* mesh2 = createMesh(sources2, loads2);
 
-    // Creating a circuit with the meshes
-    std::vector<Mesh*> meshes = {mesh1.get(), mesh2.get()};
-    auto circuit = createCircuit(meshes);
+    // Create a circuit with the meshes
+    std::vector<Mesh*> meshes = {mesh1, mesh2};
+    Circuit* circuit = createCircuit(meshes);
 
-    // Simulating the circuit
-    Simulator simulator(circuit.get());
+    // Simulate the circuit
+    Simulator simulator(circuit);
     simulator.runSimulation();
 
-    // Printing electric properties
-    std::cout << "Mesh 1 Current: " << std::abs(circuit->getMeshCurrents()[0]) << "/_" << (180.0 / PI) * std::arg(circuit->getMeshCurrents()[0]) << " A" << std::endl;
-    std::cout << "Mesh 2 Current: " << std::abs(circuit->getMeshCurrents()[1]) << "/_" << (180.0 / PI) * std::arg(circuit->getMeshCurrents()[1]) << " A" << std::endl;
+    // Print electric properties
+    std::cout << "Mesh 1 Current: " << std::abs(circuit->getMeshCurrents()[0])
+              << "/_" << (180.0 / PI) * std::arg(circuit->getMeshCurrents()[0]) << " A" << std::endl;
+    std::cout << "Mesh 2 Current: " << std::abs(circuit->getMeshCurrents()[1])
+              << "/_" << (180.0 / PI) * std::arg(circuit->getMeshCurrents()[1]) << " A" << std::endl;
 
-    // Printing matrices and vectors using Eigen's stream operators and manual loops
+    // Print matrices and vectors
     std::cout << "Impedance Matrix:" << std::endl;
     printMatrix(circuit->getImpedanceMatrix());
 
@@ -110,6 +123,15 @@ int main() {
     std::cout << "Voltage Vector:" << std::endl;
     printVector(circuit->getVoltageVector());
 
-    // Memory is automatically cleaned up by unique_ptr
+    // Clean up allocated memory
+    delete voltageSource1;
+    delete voltageSource2;
+    delete load1;
+    delete load2;
+    delete load3;
+    delete mesh1;
+    delete mesh2;
+    delete circuit;
+
     return 0;
 }

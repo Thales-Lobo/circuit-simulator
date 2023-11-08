@@ -56,7 +56,7 @@ public:
     ACSource(double firstValue, double secondValue, double thirdValue, 
              ValueRepresentation valueMode = ValueRepresentation::POLAR_DEGREES, 
              FrequencyRepresentation freqMode = FrequencyRepresentation::FREQUENCY,
-             Load internalLoad = Load(0.0, 0.0));
+             Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
     /**
      * @brief Virtual destructor for the ACSource class.

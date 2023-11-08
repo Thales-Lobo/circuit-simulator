@@ -1,8 +1,8 @@
 #ifndef DCVOLTAGESOURCE_HPP
 #define DCVOLTAGESOURCE_HPP
 
-#include "sources/DC/DCSource.hpp"
 #include "sources/VoltageSource.hpp"
+#include "sources/DC/DCSource.hpp"
 
 /**
  * @file DCVoltageSource.hpp
@@ -21,7 +21,7 @@ public:
      *
      * @param value The magnitude of the voltage provided by the source.
      */
-    DCVoltageSource(double value);
+    DCVoltageSource(double value, Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
     /**
      * @brief Sets the current through the DC voltage source.

@@ -8,98 +8,94 @@
 #include <vector>
 #include <complex>
 #include <unordered_map>
+#include <memory>
 
 /**
- * @brief The Circuit class represents an electrical circuit composed of meshes.
+ * @brief Represents an electrical circuit composed of multiple meshes.
  * 
- * This class is responsible for managing the meshes within a circuit, adding meshes,
- * and solving for the mesh currents using matrix methods. It utilizes the Eigen library
- * for handling complex numbers and matrix operations.
+ * The Circuit class encapsulates the functionality to manage the collection of meshes
+ * that make up an electrical circuit, and provides the capability to solve for the mesh
+ * currents using matrix methods. It leverages the Eigen library for complex number and
+ * matrix operations, facilitating the analysis of the circuit.
  */
 class Circuit {
 private:
-    std::vector<Mesh*> meshes;  ///< Vector of pointers to Mesh objects in the circuit.
-    std::vector<std::complex<double>> meshCurrents; ///< Vector of complex numbers representing the currents in each mesh.
-    Eigen::MatrixXcd impedanceMatrix; ///< Matrix of complex numbers representing the impedance between meshes.
-    Eigen::VectorXcd voltageVector; ///< Vector of complex numbers representing the voltage for each mesh.
-    Eigen::VectorXcd currentVector; ///< Vector of complex numbers representing the solution for mesh currents.
+    using CurrentSourceMap = std::unordered_map<CurrentSource*, std::vector<size_t>>;
+
+    std::vector<std::unique_ptr<Mesh>> meshes;  ///< Stores unique pointers to Mesh objects within the circuit.
+    std::vector<std::complex<double>> meshCurrents; ///< Holds the currents for each mesh as complex numbers, post-solution.
+    Eigen::MatrixXcd impedanceMatrix; ///< Represents the impedance relationships between meshes as a complex matrix.
+    Eigen::VectorXcd voltageVector; ///< Captures the net voltage for each mesh as a complex vector.
+    Eigen::VectorXcd currentVector; ///< Contains the solution for mesh currents as a complex vector.
+
+    // Private helper methods for circuit analysis
+    CurrentSourceMap mapCurrentSourcesToMeshes() const; ///< Maps current sources to the meshes they influence, essential for setting up the circuit equations
+    std::complex<double> calculateCommonImpedance(const Mesh* mesh1, const Mesh* mesh2) const;  ///< Calculates the impedance common to two meshes, used in constructing the impedance matrix
+    void prepareImpedanceMatrix(size_t numMeshes, size_t matrixSize, const CurrentSourceMap& currentSourcesMap);    ///< Sets up the impedance matrix, accounting for the impedance of each mesh and the influence of current sources
+    void fillImpedanceMatrixRow(size_t row, const Mesh* mesh);  ///< Populates a single row of the impedance matrix with the impedance values of a given mesh
+    void addCurrentSourcesToImpedanceMatrix(size_t numMeshes, const CurrentSourceMap& currentSourcesMap);   ///< Integrates current sources into the impedance matrix, modifying it to reflect their presence
+    void addCurrentSourceBetweenMeshes(size_t row, const std::vector<size_t>& meshIndices); ///< Inserts the effects of a current source that spans two meshes into the impedance matrix
+    void prepareVoltageVector(size_t numMeshes, size_t matrixSize);  ///< Prepares the voltage vector for the circuit, which includes the voltages of meshes and the effects of current sources
+    void solveSystemOfEquations(); ///< Solves the matrix equation to find the mesh currents, using the impedance matrix and voltage vector
+    void assignCurrentsToSources(size_t numMeshes, const CurrentSourceMap& currentSourcesMap);  ///<
 
 public:
+    // Constructors
     /**
-     * @brief Default constructor for the Circuit class.
-     * 
-     * Initializes an empty circuit with no meshes.
+     * @brief Default constructor that initializes an empty circuit.
      */
     Circuit();
 
     /**
-     * @brief Parameterized constructor for the Circuit class.
-     * 
-     * Initializes a circuit with a given vector of meshes.
-     * @param meshes Vector of pointers to Mesh objects to be included in the circuit.
+     * @brief Constructs a circuit with a given collection of meshes.
+     * @param meshes Vector of unique pointers to Mesh objects.
      */
-    Circuit(std::vector<Mesh*> meshes);
+    Circuit(std::vector<std::unique_ptr<Mesh>> meshes);
 
+    // Mesh management methods
     /**
      * @brief Adds a mesh to the circuit.
-     * 
-     * This function takes a pointer to a Mesh object and adds it to the circuit's list of meshes.
-     * @param mesh Pointer to the Mesh object to add.
+     * @param mesh Unique pointer to the Mesh object to be added to the circuit.
      */
-    void addMesh(Mesh* mesh);
+    void addMesh(std::unique_ptr<Mesh> mesh);
 
     /**
-     * @brief Retrieves all meshes in the circuit.
-     * 
-     * This function returns a vector containing pointers to all the Mesh objects in the circuit.
-     * @return Vector of pointers to Mesh objects.
+     * @brief Retrieves pointers to all the Mesh objects in the circuit.
+     * @return Vector of raw pointers to Mesh objects.
      */
     std::vector<Mesh*> getMeshes() const;
 
+    // Getters for circuit properties
     /**
-     * @brief Retrieves the mesh currents.
-     * 
-     * This function returns a vector of complex numbers representing the currents in each mesh after the circuit has been solved.
+     * @brief Gets the currents for each mesh in the circuit.
      * @return Vector of complex numbers representing the mesh currents.
      */
     std::vector<std::complex<double>> getMeshCurrents() const;
 
     /**
-     * @brief Retrieves the impedance matrix of the circuit.
-     * 
-     * This function returns a constant reference to the impedance matrix of the circuit, which represents the impedance between each pair of meshes.
+     * @brief Gets the impedance matrix of the circuit.
      * @return Constant reference to the impedance matrix.
      */
     const Eigen::MatrixXcd& getImpedanceMatrix() const;
 
     /**
-     * @brief Retrieves the voltage vector of the circuit.
-     * 
-     * This function returns a constant reference to the voltage vector of the circuit, which represents the net voltage for each mesh.
+     * @brief Gets the voltage vector for the circuit.
      * @return Constant reference to the voltage vector.
      */
     const Eigen::VectorXcd& getVoltageVector() const;
-    
+
     /**
-     * @brief Retrieves the current vector of the circuit.
-     * 
-     * This function returns a constant reference to the current vector of the circuit, which represents the calculated mesh currents after solving the circuit.
+     * @brief Gets the current vector representing the solution for mesh currents.
      * @return Constant reference to the current vector.
      */
     const Eigen::VectorXcd& getCurrentVector() const;
 
+    // Circuit analysis method
     /**
-     * @brief Analyzes and maps current sources to their respective meshes.
+     * @brief Solves for the mesh currents in the circuit using matrix methods.
      * 
-     * This function identifies which current sources are present in multiple meshes and creates a mapping from each current source to the meshes it is part of.
-     * @return Unordered map with current sources as keys and vectors of integers representing the indices of meshes as values.
-     */
-    std::unordered_map<CurrentSource*, std::vector<size_t>> mapCurrentSourcesToMeshes() const;
-
-    /**
-     * @brief Solves for the mesh currents using matrix methods.
-     * 
-     * This function applies matrix methods to solve for the currents in each mesh of the circuit. It uses the Eigen library to perform matrix operations.
+     * This method sets up and solves the system of equations derived from the circuit's
+     * mesh analysis. It updates the meshCurrents vector with the solution.
      */
     void solveMeshCurrents();
 };

@@ -1,8 +1,8 @@
 #ifndef DCCURRENTSOURCE_HPP
 #define DCCURRENTSOURCE_HPP
 
-#include "sources/DC/DCSource.hpp"
 #include "sources/CurrentSource.hpp"
+#include "sources/DC/DCSource.hpp"
 
 /**
  * @file DCCurrentSource.hpp
@@ -21,7 +21,7 @@ public:
      *
      * @param value The magnitude of the current for the DC current source.
      */
-    DCCurrentSource(double value);
+    DCCurrentSource(double value, Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
     /**
      * @brief Sets the voltage across the DC current source.
