@@ -4,14 +4,7 @@
 ACVoltageSource::ACVoltageSource(double firstValue, double secondValue, double thirdValue, 
                                  ACSource::ValueRepresentation valueMode, 
                                  ACSource::FrequencyRepresentation freqMode,
-                                 Load internalLoad)
-    : ACSource(firstValue, secondValue, thirdValue, valueMode, freqMode, internalLoad) {
+                                 Load internalLoadParam)
+    : ACSource(firstValue, secondValue, thirdValue, valueMode, freqMode, internalLoadParam) {
         voltage = value;
     }
-
-void ACVoltageSource::setCurrent(std::complex<double> newCurrent) {
-    if (Source::current != newCurrent) {
-        Source::current = newCurrent;
-        Source::calculatePowers();
-    }
-}

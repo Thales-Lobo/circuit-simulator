@@ -39,3 +39,22 @@ double Source::getReactivePower() const {
 double Source::getPhase() const {
     return phase;
 }
+
+// Setters
+void Source::setInternalLoad(Load internalLoadParam) {
+    internalLoad = internalLoadParam;
+}
+
+void Source::setVoltage(std::complex<double> newVoltage) {
+    if (voltage != newVoltage) {
+        voltage = newVoltage;
+        calculatePowers();
+    }
+}
+
+void Source::setCurrent(std::complex<double> newCurrent) {
+    if (current != newCurrent) {
+        current = newCurrent;
+        calculatePowers();
+    }
+}

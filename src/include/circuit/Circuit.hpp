@@ -20,24 +20,30 @@
  */
 class Circuit {
 private:
-    using CurrentSourceMap = std::unordered_map<CurrentSource*, std::vector<size_t>>;
+    using ACCurrentSourceMap = std::unordered_map<ACCurrentSource*, std::vector<size_t>>;
+    using DCCurrentSourceMap = std::unordered_map<DCCurrentSource*, std::vector<size_t>>;
 
-    std::vector<std::unique_ptr<Mesh>> meshes;  ///< Stores unique pointers to Mesh objects within the circuit.
+    struct CurrentSourceMaps {
+        ACCurrentSourceMap acSources; ///< AC current sources struct
+        DCCurrentSourceMap dcSources; ///< DC current sources struct
+    };
+
+    std::vector<std::shared_ptr<Mesh>> meshes;  ///< Stores unique pointers to Mesh objects within the circuit.
     std::vector<std::complex<double>> meshCurrents; ///< Holds the currents for each mesh as complex numbers, post-solution.
     Eigen::MatrixXcd impedanceMatrix; ///< Represents the impedance relationships between meshes as a complex matrix.
     Eigen::VectorXcd voltageVector; ///< Captures the net voltage for each mesh as a complex vector.
     Eigen::VectorXcd currentVector; ///< Contains the solution for mesh currents as a complex vector.
 
     // Private helper methods for circuit analysis
-    CurrentSourceMap mapCurrentSourcesToMeshes() const; ///< Maps current sources to the meshes they influence, essential for setting up the circuit equations
+    CurrentSourceMaps mapCurrentSourcesToMeshes() const; ///< Maps current sources to the meshes they influence, essential for setting up the circuit equations
     std::complex<double> calculateCommonImpedance(const Mesh* mesh1, const Mesh* mesh2) const;  ///< Calculates the impedance common to two meshes, used in constructing the impedance matrix
-    void prepareImpedanceMatrix(size_t numMeshes, size_t matrixSize, const CurrentSourceMap& currentSourcesMap);    ///< Sets up the impedance matrix, accounting for the impedance of each mesh and the influence of current sources
+    void prepareImpedanceMatrix(size_t numMeshes, size_t matrixSize, const CurrentSourceMaps& currentSourcesMap);    ///< Sets up the impedance matrix, accounting for the impedance of each mesh and the influence of current sources
     void fillImpedanceMatrixRow(size_t row, const Mesh* mesh);  ///< Populates a single row of the impedance matrix with the impedance values of a given mesh
-    void addCurrentSourcesToImpedanceMatrix(size_t numMeshes, const CurrentSourceMap& currentSourcesMap);   ///< Integrates current sources into the impedance matrix, modifying it to reflect their presence
+    void addCurrentSourcesToImpedanceMatrix(size_t numMeshes, const CurrentSourceMaps& currentSourcesMap);   ///< Integrates current sources into the impedance matrix, modifying it to reflect their presence
     void addCurrentSourceBetweenMeshes(size_t row, const std::vector<size_t>& meshIndices); ///< Inserts the effects of a current source that spans two meshes into the impedance matrix
     void prepareVoltageVector(size_t numMeshes, size_t matrixSize);  ///< Prepares the voltage vector for the circuit, which includes the voltages of meshes and the effects of current sources
     void solveSystemOfEquations(); ///< Solves the matrix equation to find the mesh currents, using the impedance matrix and voltage vector
-    void assignCurrentsToSources(size_t numMeshes, const CurrentSourceMap& currentSourcesMap);  ///<
+    void assignCurrentsToSources(size_t numMeshes, const CurrentSourceMaps& currentSourcesMap);  ///<
 
 public:
     // Constructors
@@ -50,14 +56,14 @@ public:
      * @brief Constructs a circuit with a given collection of meshes.
      * @param meshes Vector of unique pointers to Mesh objects.
      */
-    Circuit(std::vector<std::unique_ptr<Mesh>> meshes);
+    Circuit(std::vector<std::shared_ptr<Mesh>> initMeshes);
 
     // Mesh management methods
     /**
      * @brief Adds a mesh to the circuit.
      * @param mesh Unique pointer to the Mesh object to be added to the circuit.
      */
-    void addMesh(std::unique_ptr<Mesh> mesh);
+    void addMesh(std::shared_ptr<Mesh> mesh);
 
     /**
      * @brief Retrieves pointers to all the Mesh objects in the circuit.

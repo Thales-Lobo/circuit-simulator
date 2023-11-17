@@ -1,46 +1,39 @@
 #include "sources/AC/ACSource.hpp"
 
-// Constructor using amplitude, frequency, and phase
+// Constructor for ACSource using amplitude, frequency, and phase.
+// It initializes member variables based on the given value and frequency representations.
 ACSource::ACSource(double firstValue, double secondValue, double thirdValue, 
-                    ValueRepresentation valueMode, FrequencyRepresentation freqMode, Load internalLoad) {
-
-    // Handle value representation
-    switch (valueMode) {
-        // Set value using rectangular coordinates
-        case ValueRepresentation::RECTANGULAR:
-            value = std::complex<double>(firstValue, secondValue); 
-            break;
-
-        // Set value using polar coordinates (degrees)
-        case ValueRepresentation::POLAR_DEGREES:
-            value = std::polar(firstValue, secondValue * PI / 180); 
-            break;
-
-        // Set value using polar coordinates (radians)
-        case ValueRepresentation::POLAR_RADIANS:
-            value = std::polar(firstValue, secondValue); 
-            break;
-    }
-
-    // Handle frequency representation
-    switch (freqMode) {
-        // Set frequency directly
-        case FrequencyRepresentation::FREQUENCY:
-            frequency = thirdValue; 
-            break;
-
-        // Convert angular frequency to regular frequency
-        case FrequencyRepresentation::ANGULAR_FREQUENCY:
-            frequency = thirdValue / (2 * PI); 
-            break;
-    }
-
-    // Common calculations
-    amplitude         = std::abs(value);
-    phase             = std::arg(value);
-    angularFrequency  = 2 * PI * frequency;
-    internalLoad      = internalLoad;
+                   ValueRepresentation valueMode, FrequencyRepresentation freqMode,
+                   Load internalLoadParam)
+    : amplitude(determineValue(firstValue, secondValue, valueMode).real()),
+      frequency(determineFrequency(thirdValue, freqMode)),
+      angularFrequency(2 * M_PI * frequency),
+      phase(determineValue(firstValue, secondValue, valueMode).imag()),
+      value(amplitude, phase)
+{
+    setInternalLoad(internalLoadParam);
 }
+
+// Handles the value representation based on mode and converts to a complex number.
+std::complex<double> ACSource::determineValue(double magnitude, double angle, ValueRepresentation mode) {
+    if (mode == ValueRepresentation::RECTANGULAR) {
+        return std::complex<double>(magnitude, angle);
+    }
+
+    // Adjust magnitude and angle for polar coordinates, taking into account negative magnitudes.
+    double adjustedMagnitude = std::abs(magnitude);
+    double adjustedAngle = angle + (magnitude < 0 ? (mode == ValueRepresentation::POLAR_DEGREES ? 180 : PI) : 0);
+    double angleInRadians = mode == ValueRepresentation::POLAR_DEGREES ? adjustedAngle * PI / 180 : adjustedAngle;
+
+    return std::polar(adjustedMagnitude, angleInRadians);
+}
+
+// Determines the frequency based on the provided mode.
+double ACSource::determineFrequency(double freqValue, FrequencyRepresentation mode) {
+    // Convert angular frequency to regular frequency if needed.
+    return mode == FrequencyRepresentation::ANGULAR_FREQUENCY ? freqValue / (2 * PI) : freqValue;
+}
+
 
 // Getters
 double ACSource::getFrequency() {

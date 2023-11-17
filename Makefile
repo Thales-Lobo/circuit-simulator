@@ -2,10 +2,10 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -Wall -Wextra -std=c++17 -Isrc/include
+CXXFLAGS = -g -Wall -Wextra -std=c++17 -Isrc/include
 
 # Source directories
-SRC_DIRS = src src/circuit src/components src/sources src/sources/AC src/sources/DC src/simulator src/test
+SRC_DIRS = src src/circuit src/load src/load/components src/sources src/sources/AC src/sources/DC src/simulator
 
 # Automatically find all the source files in the specified source directories
 SOURCES = $(shell find $(SRC_DIRS) -name *.cpp)

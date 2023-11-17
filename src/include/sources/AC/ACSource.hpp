@@ -32,6 +32,36 @@ protected:
         ANGULAR_FREQUENCY ///< Represent angular frequency in radians per second.
     };
 
+    /**
+     * @brief Determines the complex value of the AC source.
+     * 
+     * This method calculates the complex number representing the AC source
+     * based on the magnitude and angle, taking into account the representation mode
+     * (either in rectangular or polar form).
+     *
+     * @param magnitude The magnitude of the complex number. In polar mode, it's the radius;
+     *                  in rectangular mode, it's the real part.
+     * @param angle The angle of the complex number. In polar mode, it's the phase angle;
+     *              in rectangular mode, it's the imaginary part.
+     * @param mode The representation mode of the value (RECTANGULAR or POLAR).
+     * @return std::complex<double> The calculated complex value.
+     */
+    std::complex<double> determineValue(double magnitude, double angle, ValueRepresentation mode);
+    
+    /**
+     * @brief Determines the frequency of the AC source.
+     * 
+     * This method converts the given frequency value into the actual frequency
+     * of the AC source, based on the specified representation mode.
+     * It supports direct frequency or angular frequency input.
+     *
+     * @param freqValue The input frequency value. This can be either the regular frequency
+     *                  or angular frequency, depending on the mode.
+     * @param mode The frequency representation mode (FREQUENCY or ANGULAR_FREQUENCY).
+     * @return double The actual frequency of the AC source.
+     */
+    double determineFrequency(double freqValue, FrequencyRepresentation mode);
+
     double amplitude;              ///< The maximum value of the current or voltage.
     double frequency;              ///< The frequency in hertz at which the source operates.
     double angularFrequency;       ///< The angular frequency in radians per second.
@@ -51,12 +81,12 @@ public:
      * @param thirdValue The phase of the source in degrees or radians.
      * @param valueMode The representation of the amplitude and phase (default is polar degrees).
      * @param freqMode The representation of the frequency (default is frequency in hertz).
-     * @param internalLoad The internal load of the source (default is a load with zero impedance).
+     * @param internalLoadParam The internal load of the source (default is a load with zero impedance).
      */
     ACSource(double firstValue, double secondValue, double thirdValue, 
              ValueRepresentation valueMode = ValueRepresentation::POLAR_DEGREES, 
              FrequencyRepresentation freqMode = FrequencyRepresentation::FREQUENCY,
-             Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
+             Load internalLoadParam = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
     /**
      * @brief Virtual destructor for the ACSource class.

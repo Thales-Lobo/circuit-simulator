@@ -1,9 +1,9 @@
 #include "sources/DC/DCSource.hpp"
 
 // Constructor
-DCSource::DCSource(double value, Load internalLoad) {
-    value = value;
-    internalLoad = internalLoad;
+DCSource::DCSource(double valueParam, Load internalLoadParam) {
+    value = valueParam;
+    internalLoad = internalLoadParam;
 }
 
 std::complex<double> DCSource::getValue() {

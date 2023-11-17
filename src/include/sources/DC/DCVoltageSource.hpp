@@ -1,7 +1,6 @@
 #ifndef DCVOLTAGESOURCE_HPP
 #define DCVOLTAGESOURCE_HPP
 
-#include "sources/VoltageSource.hpp"
 #include "sources/DC/DCSource.hpp"
 
 /**
@@ -11,7 +10,7 @@
  * in an electrical circuit simulation. It inherits from the DCSource class.
  */
 
-class DCVoltageSource : public DCSource, public VoltageSource {
+class DCVoltageSource : public DCSource {
 public:
     /**
      * @brief Constructs a DC voltage source with a specified voltage value.
@@ -21,19 +20,8 @@ public:
      *
      * @param value The magnitude of the voltage provided by the source.
      */
-    DCVoltageSource(double value, Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
+    DCVoltageSource(double value, Load internalLoadParam = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
-    /**
-     * @brief Sets the current through the DC voltage source.
-     *
-     * This function allows setting the current that flows through the voltage source,
-     * which can be useful in certain simulation scenarios where the current needs to be
-     * controlled or monitored.
-     *
-     * @param current The complex current value to be set, typically the real part represents
-     *                the current magnitude and the imaginary part is zero for DC sources.
-     */
-    void setCurrent(std::complex<double> current) override;
 };
 
 #endif // DCVOLTAGESOURCE_HPP

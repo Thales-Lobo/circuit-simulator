@@ -1,7 +1,6 @@
 #ifndef ACVOLTAGESOURCE_HPP
 #define ACVOLTAGESOURCE_HPP
 
-#include "sources/VoltageSource.hpp"
 #include "sources/AC/ACSource.hpp"
 
 /**
@@ -11,7 +10,7 @@
  * It inherits from ACSource and allows setting of current in addition to voltage source parameters.
  */
 
-class ACVoltageSource : public ACSource, public VoltageSource {
+class ACVoltageSource : public ACSource {
 public:
     /**
      * @brief Constructs an AC voltage source with specified amplitude, frequency, and phase.
@@ -29,17 +28,8 @@ public:
     ACVoltageSource(double firstValue, double secondValue, double thirdValue, 
                     ACSource::ValueRepresentation valueMode = ACSource::ValueRepresentation::POLAR_DEGREES, 
                     ACSource::FrequencyRepresentation freqMode = ACSource::FrequencyRepresentation::FREQUENCY,
-                    Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
+                    Load internalLoadParam = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
-    /**
-     * @brief Sets the current flowing through the AC voltage source.
-     *
-     * This setter method allows the current flowing through the AC voltage source to be specified.
-     * The current is a complex number representing both the magnitude and phase of the current.
-     *
-     * @param current The complex current value to be set for the AC voltage source.
-     */
-    void setCurrent(std::complex<double> current) override;
 };
 
 #endif // ACVOLTAGESOURCE_HPP

@@ -1,6 +1,3 @@
-// Constants includes
-#include "constants/Constants.hpp"
-
 // Sources includes
 #include "sources/DC/DCVoltageSource.hpp"
 #include "sources/DC/DCCurrentSource.hpp"
@@ -23,33 +20,34 @@
 #include <vector>
 #include <complex>
 
+
 // Function prototypes for creating components
-ACVoltageSource* createACVoltageSource(double magnitude, double phase, double frequency);
-Load* createLoad(double magnitude, double phase);
-Mesh* createMesh(const std::vector<Source*>& sources, const std::vector<Load*>& loads);
-Circuit* createCircuit(const std::vector<Mesh*>& meshes);
+std::shared_ptr<ACVoltageSource> createACVoltageSource(double magnitude, double phase, double frequency);
+std::shared_ptr<Load> createLoad(double magnitude, double phase);
+std::shared_ptr<Mesh> createMesh(std::vector<std::shared_ptr<Source>>& sources, std::vector<std::shared_ptr<Load>>& loads);
+std::shared_ptr<Circuit> createCircuit(std::vector<std::shared_ptr<Mesh>>& meshes);
 void printMatrix(const Eigen::MatrixXcd& matrix);
 void printVector(const Eigen::VectorXcd& vector);
 
 // Function definitions for creating components
 // Creates an AC voltage source
-ACVoltageSource* createACVoltageSource(double magnitude, double phase, double frequency) {
-    return new ACVoltageSource(magnitude, phase, frequency);
+std::shared_ptr<ACVoltageSource> createACVoltageSource(double magnitude, double phase, double frequency) {
+    return std::make_shared<ACVoltageSource>(magnitude, phase, frequency);
 }
 
 // Creates a load with specified magnitude and phase
-Load* createLoad(double magnitude, double phase) {
-    return new Load(magnitude, phase);
+std::shared_ptr<Load> createLoad(double magnitude, double phase) {
+    return std::make_shared<Load>(magnitude, phase);
 }
 
 // Creates a mesh from given sources and loads
-Mesh* createMesh(const std::vector<Source*>& sources, const std::vector<Load*>& loads) {
-    return new Mesh(sources, loads);
+std::shared_ptr<Mesh> createMesh(std::vector<std::shared_ptr<Source>>& sources, std::vector<std::shared_ptr<Load>>& loads) {
+    return std::make_shared<Mesh>(sources, loads);
 }
 
 // Creates a circuit from a collection of meshes
-Circuit* createCircuit(const std::vector<Mesh*>& meshes) {
-    return new Circuit(meshes);
+std::shared_ptr<Circuit> createCircuit(std::vector<std::shared_ptr<Mesh>>& meshes) {
+    return std::make_shared<Circuit>(meshes);
 }
 
 // Prints a matrix to the console
@@ -78,60 +76,46 @@ void printVector(const Eigen::VectorXcd& vector) {
 }
 
 int main() {
-    // Create voltage sources
-    ACVoltageSource* voltageSource1 = createACVoltageSource(60.0, 20.0, 60.0); // 60V, 20°, 60Hz
-    ACVoltageSource* voltageSource2 = createACVoltageSource(-10.0, 70.0, 60.0); // -10V, 70°, 60Hz
+    // Create voltage sources using shared pointers
+    auto voltageSource1 = createACVoltageSource(60.0, 20.0, 60.0); // 60V, 20°, 60Hz
+    auto voltageSource2 = createACVoltageSource(10.0, 70.0, 60.0); // -10V, 70°, 60Hz
 
-    // Create loads
-    Load* load1 = createLoad(30.0, 30.0); // 30 ohms at 30°
-    Load* load2 = createLoad(40.0, 60.0); // 40 ohms at 60°
-    Load* load3 = createLoad(15.0, 20.0); // 15 ohms at 20°
+    // Create loads using shared pointers
+    auto load1 = createLoad(30.0, 0.0); // 30 ohms at 30°
+    auto load2 = createLoad(40.0, 0.0); // 40 ohms at 60°
+    auto load3 = createLoad(15.0, 0.0); // 15 ohms at 20°
 
     // Create the first mesh with the loads
-    std::vector<Source*> sources1 = {voltageSource1};
-    std::vector<Load*> loads1 = {load1, load3};
+    std::vector<std::shared_ptr<Source>> sources1   = {voltageSource1};
+    std::vector<std::shared_ptr<Load>> loads1       = {load1, load3};
+    auto mesh1 = std::make_shared<Mesh>(sources1, loads1);
 
     // Create the second mesh with the loads
-    std::vector<Source*> sources2 = {voltageSource2};
-    std::vector<Load*> loads2 = {load3, load2};
-
-    // Create meshes
-    Mesh* mesh1 = createMesh(sources1, loads1);
-    Mesh* mesh2 = createMesh(sources2, loads2);
+    std::vector<std::shared_ptr<Source>> sources2   = {voltageSource2};
+    std::vector<std::shared_ptr<Load>> loads2       = {load3, load2};
+    auto mesh2 = std::make_shared<Mesh>(sources2, loads2);
 
     // Create a circuit with the meshes
-    std::vector<Mesh*> meshes = {mesh1, mesh2};
-    Circuit* circuit = createCircuit(meshes);
+    Circuit circuit;
+    circuit.addMesh(mesh1);
+    circuit.addMesh(mesh2);
 
     // Simulate the circuit
-    Simulator simulator(circuit);
+    Simulator simulator(&circuit);
     simulator.runSimulation();
-
-    // Print electric properties
-    std::cout << "Mesh 1 Current: " << std::abs(circuit->getMeshCurrents()[0])
-              << "/_" << (180.0 / PI) * std::arg(circuit->getMeshCurrents()[0]) << " A" << std::endl;
-    std::cout << "Mesh 2 Current: " << std::abs(circuit->getMeshCurrents()[1])
-              << "/_" << (180.0 / PI) * std::arg(circuit->getMeshCurrents()[1]) << " A" << std::endl;
+    
+    // Output the results
+    std::cout << "--Results--" << std::endl << std::endl;
 
     // Print matrices and vectors
     std::cout << "Impedance Matrix:" << std::endl;
-    printMatrix(circuit->getImpedanceMatrix());
-
-    std::cout << "Current Vector:" << std::endl;
-    printVector(circuit->getCurrentVector());
+    printMatrix(circuit.getImpedanceMatrix());
 
     std::cout << "Voltage Vector:" << std::endl;
-    printVector(circuit->getVoltageVector());
+    printVector(circuit.getVoltageVector());
 
-    // Clean up allocated memory
-    delete voltageSource1;
-    delete voltageSource2;
-    delete load1;
-    delete load2;
-    delete load3;
-    delete mesh1;
-    delete mesh2;
-    delete circuit;
+    std::cout << "Current Vector:" << std::endl;
+    printVector(circuit.getCurrentVector());
 
     return 0;
 }

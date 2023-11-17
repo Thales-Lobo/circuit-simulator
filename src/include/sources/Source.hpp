@@ -2,7 +2,7 @@
 #define SOURCE_HPP
 
 #include "constants/Constants.hpp"
-#include "Load/Load.hpp"
+#include "load/Load.hpp"
 #include <complex>
 
 /**
@@ -87,6 +87,40 @@ public:
      * @return The phase angle in radians.
      */
     double getPhase() const;
+
+    /**
+     * @brief Set the Internal Load of the Source.
+     *
+     * This method sets the internal load of the Source object. The internal load
+     * can be any value of the Load type, and it represents a specific load
+     * characteristic or requirement of the Source. This setting might affect
+     * how the Source interacts with connected circuits or components.
+     *
+     * @param internalLoadParam The internal load value to be set for the Source.
+     *                          This parameter must be of Load type and represents the
+     *                          load characteristic to be applied to the Source.
+     */
+    void setInternalLoad(Load internalLoadParam);
+
+    /**
+     * @brief Sets the voltage of the source.
+     *
+     * This function allows setting the complex voltage across the source. It updates the voltage
+     * member variable to the specified value.
+     *
+     * @param voltage The complex voltage to be set for the source.
+     */
+    void setVoltage(std::complex<double> voltage);
+
+    /**
+     * @brief Sets the current through the source.
+     *
+     * This function enables setting the complex current through the source. It updates the current
+     * member variable with the provided value.
+     *
+     * @param current The complex current to be set for the source.
+     */
+    void setCurrent(std::complex<double> current);
 };
 
 #endif // SOURCE_HPP

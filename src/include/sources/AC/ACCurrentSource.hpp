@@ -1,7 +1,6 @@
 #ifndef ACCURRENTSOURCE_HPP
 #define ACCURRENTSOURCE_HPP
 
-#include "sources/CurrentSource.hpp"
 #include "sources/AC/ACSource.hpp"
 
 /**
@@ -11,7 +10,7 @@
  * that provides a current with a specific amplitude, frequency, and phase.
  */
 
-class ACCurrentSource : public ACSource, public CurrentSource {
+class ACCurrentSource : public ACSource {
 public:
     /**
      * @brief Constructs an AC current source with specified parameters.
@@ -29,17 +28,8 @@ public:
     ACCurrentSource(double firstValue, double secondValue, double thirdValue, 
                     ACSource::ValueRepresentation valueMode = ACSource::ValueRepresentation::POLAR_DEGREES, 
                     ACSource::FrequencyRepresentation freqMode = ACSource::FrequencyRepresentation::FREQUENCY,
-                    Load internalLoad = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
+                    Load internalLoadParam = Load(0.0, 0.0, Load::RepresentationMode::POLAR_DEGREES));
 
-    /**
-     * @brief Sets the voltage across the AC current source.
-     *
-     * This method allows setting the voltage across the AC current source, which can be
-     * used in conjunction with the current to calculate power and other electrical properties.
-     *
-     * @param voltage The complex voltage value to set.
-     */
-    void setVoltage(std::complex<double> voltage) override;
 };
 
 #endif // ACCURRENTSOURCE_HPP
