@@ -96,12 +96,11 @@ int main() {
     auto mesh2 = std::make_shared<Mesh>(sources2, loads2);
 
     // Create a circuit with the meshes
-    Circuit circuit;
-    circuit.addMesh(mesh1);
-    circuit.addMesh(mesh2);
+    std::vector<std::shared_ptr<Mesh>> meshes = {mesh1, mesh2};
+    auto circuit = createCircuit(meshes);
 
     // Simulate the circuit
-    Simulator simulator(&circuit);
+    Simulator simulator(circuit);
     simulator.runSimulation();
     
     // Output the results
@@ -109,13 +108,13 @@ int main() {
 
     // Print matrices and vectors
     std::cout << "Impedance Matrix:" << std::endl;
-    printMatrix(circuit.getImpedanceMatrix());
+    printMatrix(circuit->getImpedanceMatrix());
 
     std::cout << "Voltage Vector:" << std::endl;
-    printVector(circuit.getVoltageVector());
+    printVector(circuit->getVoltageVector());
 
     std::cout << "Current Vector:" << std::endl;
-    printVector(circuit.getCurrentVector());
+    printVector(circuit->getCurrentVector());
 
     return 0;
 }

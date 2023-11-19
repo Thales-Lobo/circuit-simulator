@@ -22,8 +22,8 @@ std::complex<double> ACSource::determineValue(double magnitude, double angle, Va
 
     // Adjust magnitude and angle for polar coordinates, taking into account negative magnitudes.
     double adjustedMagnitude = std::abs(magnitude);
-    double adjustedAngle = angle + (magnitude < 0 ? (mode == ValueRepresentation::POLAR_DEGREES ? 180 : PI) : 0);
-    double angleInRadians = mode == ValueRepresentation::POLAR_DEGREES ? adjustedAngle * PI / 180 : adjustedAngle;
+    double adjustedAngle = angle + (magnitude < 0 ? (mode == ValueRepresentation::POLAR_DEGREES ? 180 : M_PI) : 0);
+    double angleInRadians = mode == ValueRepresentation::POLAR_DEGREES ? adjustedAngle * M_PI / 180 : adjustedAngle;
 
     return std::polar(adjustedMagnitude, angleInRadians);
 }
@@ -31,7 +31,7 @@ std::complex<double> ACSource::determineValue(double magnitude, double angle, Va
 // Determines the frequency based on the provided mode.
 double ACSource::determineFrequency(double freqValue, FrequencyRepresentation mode) {
     // Convert angular frequency to regular frequency if needed.
-    return mode == FrequencyRepresentation::ANGULAR_FREQUENCY ? freqValue / (2 * PI) : freqValue;
+    return mode == FrequencyRepresentation::ANGULAR_FREQUENCY ? freqValue / (2 * M_PI) : freqValue;
 }
 
 

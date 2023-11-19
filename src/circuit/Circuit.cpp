@@ -1,5 +1,4 @@
 #include "circuit/Circuit.hpp"
-#include <iostream>
 
 // Constructor using member initializer list
 Circuit::Circuit() {}
@@ -13,12 +12,8 @@ void Circuit::addMesh(std::shared_ptr<Mesh> mesh) {
 }
 
 // Getters
-std::vector<Mesh*> Circuit::getMeshes() const {
-    std::vector<Mesh*> meshPointers;
-    for (const auto& mesh : meshes) {
-        meshPointers.push_back(mesh.get());
-    }
-    return meshPointers;
+std::vector<std::shared_ptr<Mesh>> Circuit::getMeshes() const {
+    return meshes;
 }
 
 std::vector<std::complex<double>> Circuit::getMeshCurrents() const {
@@ -83,25 +78,25 @@ void Circuit::prepareImpedanceMatrix(size_t numMeshes, size_t matrixSize, const 
     impedanceMatrix = Eigen::MatrixXcd::Zero(matrixSize, matrixSize);
 
     for (size_t row = 0; row < numMeshes; row++) {
-        fillImpedanceMatrixRow(row, meshes[row].get());
+        fillImpedanceMatrixRow(row, meshes[row]);
     }
     addCurrentSourcesToImpedanceMatrix(numMeshes, currentSourcesMaps);
 }
 
 // Fills a single row of the impedance matrix based on the mesh's impedance and common impedances with other meshes
-void Circuit::fillImpedanceMatrixRow(size_t row, const Mesh* mesh) {
+void Circuit::fillImpedanceMatrixRow(size_t row, const std::shared_ptr<Mesh>& mesh) {
     for (size_t column = 0; column < meshes.size(); column++) {
         if (row == column) {
             impedanceMatrix(row, column) = mesh->calculateMeshImpedance();  
         } else {
-            std::complex<double> commonImpedance = calculateCommonImpedance(mesh, meshes[column].get());
+            std::complex<double> commonImpedance = calculateCommonImpedance(mesh, meshes[column]);
             impedanceMatrix(row, column) = -commonImpedance;
         }
     }
 }
 
 // Returns the total impedance value between 2 meshes
-std::complex<double> Circuit::calculateCommonImpedance(const Mesh* mesh1, const Mesh* mesh2) const {
+std::complex<double> Circuit::calculateCommonImpedance(const std::shared_ptr<Mesh>& mesh1, const std::shared_ptr<Mesh>& mesh2) const {
     std::complex<double> totalCommonImpedance = 0.0;
     auto mesh1Loads = mesh1->getLoads();
     auto mesh2Loads = mesh2->getLoads();
@@ -192,7 +187,7 @@ void Circuit::solveSystemOfEquations() {
 // Assigns the calculated currents to the respective sources in the circuit.
 void Circuit::assignCurrentsToSources(size_t numMeshes, const CurrentSourceMaps& currentSourcesMaps) {
     // Helper lambda to assign current to a source
-    auto assignCurrent = [this, numMeshes](auto* source, const std::vector<size_t>& indices) {
+    auto assignCurrent = [this, numMeshes](auto& source, const std::vector<size_t>& indices) {
         if (indices.size() == 1) {
             source->setVoltage(currentVector(numMeshes + indices.front()));
         } else if (indices.size() == 2) {

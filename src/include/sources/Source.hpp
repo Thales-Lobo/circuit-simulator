@@ -1,7 +1,6 @@
 #ifndef SOURCE_HPP
 #define SOURCE_HPP
 
-#include "constants/Constants.hpp"
 #include "load/Load.hpp"
 #include <complex>
 

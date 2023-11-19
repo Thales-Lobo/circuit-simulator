@@ -1,6 +1,6 @@
 #include "simulator/Simulator.hpp"
 
-Simulator::Simulator(Circuit* circuit) : circuit(circuit) {
+Simulator::Simulator(std::shared_ptr<Circuit> circuit) : circuit(circuit) {
     if (!circuit) {
         throw std::invalid_argument("Circuit pointer cannot be null.");
     }
@@ -26,11 +26,11 @@ void Simulator::runSimulation() {
 
     // Retrieve the calculated mesh currents and the meshes from the circuit
     const auto& meshCurrents = circuit->getMeshCurrents();
-    const auto& meshPointers = circuit->getMeshes(); // meshPointers are raw pointers (Mesh*)
+    const auto& meshes = circuit->getMeshes();
 
     // Iterate over each mesh to assign the current to loads and voltage sources
-    for (size_t index = 0; index < meshPointers.size(); index++) {
-        Mesh* mesh = meshPointers[index];
+    for (size_t index = 0; index < meshes.size(); index++) {
+        auto mesh = meshes[index];
         auto meshCurrent = meshCurrents[index];
 
         // Assign current to each load in the mesh
@@ -42,7 +42,7 @@ void Simulator::runSimulation() {
 }
 
 
-void Simulator::assignCurrentToLoads(Mesh* mesh, const std::complex<double>& meshCurrent, size_t meshIndex) {
+void Simulator::assignCurrentToLoads(std::shared_ptr<Mesh> mesh, const std::complex<double>& meshCurrent, size_t meshIndex) {
     // Iterates over all loads in the mesh to assign current
     for (auto& load : mesh->getLoads()) {
         auto current = determineLoadCurrent(load, meshCurrent, meshIndex);
@@ -63,7 +63,7 @@ std::complex<double> Simulator::determineLoadCurrent(const std::shared_ptr<Load>
     }
 }
 
-void Simulator::assignCurrentToVoltageSources(Mesh* mesh, const std::complex<double>& meshCurrent) {
+void Simulator::assignCurrentToVoltageSources(std::shared_ptr<Mesh> mesh, const std::complex<double>& meshCurrent) {
     // Iterate over all sources in the mesh to assign the calculated current
     for (auto& source : mesh->getSources()) {
         // Differentiate between AC and DC voltage sources and set current

@@ -11,7 +11,7 @@ Load::Load(double firstValue, double secondValue, RepresentationMode mode) {
             break;
 
         case RepresentationMode::POLAR_DEGREES: 
-            impedance = std::polar(firstValue, secondValue * PI / 180.0);
+            impedance = std::polar(firstValue, secondValue * M_PI / 180.0);
             break;
 
         case RepresentationMode::POLAR_RADIANS:

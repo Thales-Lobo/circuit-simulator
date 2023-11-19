@@ -69,10 +69,10 @@ std::complex<double> Mesh::calculateMeshImpedance() const {
 }
 
 // Return a vector with all common loads between two meshes
-std::vector<std::shared_ptr<Load>> Mesh::commonLoads(const Mesh* otherMesh) const {
+std::vector<std::shared_ptr<Load>> Mesh::commonLoads(const std::shared_ptr<Mesh>& otherMesh) const {
     std::vector<std::shared_ptr<Load>> commonLoads;
 
-    // Creating an unordered_set of raw pointers from otherMesh's loads for efficient lookup
+    // Creating an unordered_set of shared_ptr from otherMesh's loads for efficient lookup
     std::unordered_set<std::shared_ptr<Load>> otherLoadsSet(otherMesh->loads.begin(), otherMesh->loads.end());
     
     for (const auto& loadPtr : loads) {

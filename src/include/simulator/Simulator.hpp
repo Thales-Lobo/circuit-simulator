@@ -18,7 +18,7 @@ private:
     /**
      * @brief Pointer to the circuit to be simulated.
      */
-    Circuit* circuit;
+    std::shared_ptr<Circuit> circuit;
 
     /**
      * @brief Set of loads that are shared between different meshes in the circuit.
@@ -58,7 +58,7 @@ public:
      *
      * @param circuit Pointer to the circuit to be simulated.
      */
-    Simulator(Circuit* circuit);
+    Simulator(std::shared_ptr<Circuit> circuit);
 
     /**
      * @brief Runs the simulation on the circuit.
@@ -79,7 +79,7 @@ public:
      * @param meshCurrent The calculated current for the mesh.
      * @param meshIndex Index of the mesh in the simulation.
      */
-    void assignCurrentToLoads(Mesh* mesh, const std::complex<double>& meshCurrent, size_t meshIndex);
+    void assignCurrentToLoads(std::shared_ptr<Mesh> mesh, const std::complex<double>& meshCurrent, size_t meshIndex);
 
     /**
      * @brief Determines the current for a given load, considering shared loads.
@@ -106,7 +106,7 @@ public:
      * @param mesh Pointer to the Mesh object containing the voltage sources.
      * @param meshCurrent The calculated current for the mesh.
      */
-    void assignCurrentToVoltageSources(Mesh* mesh, const std::complex<double>& meshCurrent);
+    void assignCurrentToVoltageSources(std::shared_ptr<Mesh> mesh, const std::complex<double>& meshCurrent);
 };
 
 #endif // SIMULATOR_HPP

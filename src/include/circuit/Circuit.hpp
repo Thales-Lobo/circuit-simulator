@@ -36,9 +36,9 @@ private:
 
     // Private helper methods for circuit analysis
     CurrentSourceMaps mapCurrentSourcesToMeshes() const; ///< Maps current sources to the meshes they influence, essential for setting up the circuit equations
-    std::complex<double> calculateCommonImpedance(const Mesh* mesh1, const Mesh* mesh2) const;  ///< Calculates the impedance common to two meshes, used in constructing the impedance matrix
+    std::complex<double> calculateCommonImpedance(const std::shared_ptr<Mesh>& mesh1, const std::shared_ptr<Mesh>& mesh2) const;  ///< Calculates the impedance common to two meshes, used in constructing the impedance matrix
     void prepareImpedanceMatrix(size_t numMeshes, size_t matrixSize, const CurrentSourceMaps& currentSourcesMap);    ///< Sets up the impedance matrix, accounting for the impedance of each mesh and the influence of current sources
-    void fillImpedanceMatrixRow(size_t row, const Mesh* mesh);  ///< Populates a single row of the impedance matrix with the impedance values of a given mesh
+    void fillImpedanceMatrixRow(size_t row, const std::shared_ptr<Mesh>& mesh);  ///< Populates a single row of the impedance matrix with the impedance values of a given mesh
     void addCurrentSourcesToImpedanceMatrix(size_t numMeshes, const CurrentSourceMaps& currentSourcesMap);   ///< Integrates current sources into the impedance matrix, modifying it to reflect their presence
     void addCurrentSourceBetweenMeshes(size_t row, const std::vector<size_t>& meshIndices); ///< Inserts the effects of a current source that spans two meshes into the impedance matrix
     void prepareVoltageVector(size_t numMeshes, size_t matrixSize);  ///< Prepares the voltage vector for the circuit, which includes the voltages of meshes and the effects of current sources
@@ -69,7 +69,7 @@ public:
      * @brief Retrieves pointers to all the Mesh objects in the circuit.
      * @return Vector of raw pointers to Mesh objects.
      */
-    std::vector<Mesh*> getMeshes() const;
+    std::vector<std::shared_ptr<Mesh>> getMeshes() const;
 
     // Getters for circuit properties
     /**

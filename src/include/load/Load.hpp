@@ -1,7 +1,6 @@
 #ifndef LOAD_HPP
 #define LOAD_HPP
 
-#include "constants/Constants.hpp"
 #include <complex>
 
 /**

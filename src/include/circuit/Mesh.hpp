@@ -90,7 +90,7 @@ public:
      * @param otherMesh Pointer to another Mesh object.
      * @return A vector of pointers to Load objects that are common between the two meshes.
      */
-    std::vector<std::shared_ptr<Load>> commonLoads(const Mesh* otherMesh) const;
+    std::vector<std::shared_ptr<Load>> commonLoads(const std::shared_ptr<Mesh>& otherMesh) const;
 };
 
 #endif // MESH_HPP
